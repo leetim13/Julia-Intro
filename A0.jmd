@@ -1,6 +1,6 @@
 ---
 title : Assignment 0
-author : Student Name and \#
+author : Timothy Lee 1003906231
 options:
   eval: false #Set this to true if you'd like to evaluate the code in this document
 ---
@@ -21,22 +21,22 @@ You are expected to submit a typeset (LaTeX) **write-up** (pdf) that contains ev
 * Plots must be included in the writeup, and be clearly labelled (title, axes, legend, caption).
 * Unit tests. For some questions where you implement a piece of code, you will be expected to test the correctness of that code. Include your unit tests in your writeup.
 
-You will also be expected to include **all source code** along with your writeup. 
+You will also be expected to include **all source code** along with your writeup.
 However, graders will not be expected to run your source code.
 
-Questions where you are asked to run unit tests may require you to produce the unit test. For example, in question 2.1 you will manually write the derivates for various functions. 
+Questions where you are asked to run unit tests may require you to produce the unit test. For example, in question 2.1 you will manually write the derivates for various functions.
 In question 2.2 you will use Automatic Differentiation to compute derivatives of those same functions.
 You will test the correctness of these answers by producing unit tests for each question.
 This is a very useful practice because it's possible that either your code or your math may be incorrect, but it's much less likely (still possible) that both are incorrect for the same reasons!
 
-If you are using the Julia starter code I have included all the packages you will need in the repo. 
-You can activate those packages in the command-line by starting the julia session with `julia --project` 
-or if you are already in the REPL (like in Atom) by opening the package manager (by typing `[` into the REPL) and activating the project `[ activate .` (the period is part of the command). 
+If you are using the Julia starter code I have included all the packages you will need in the repo.
+You can activate those packages in the command-line by starting the julia session with `julia --project`
+or if you are already in the REPL (like in Atom) by opening the package manager (by typing `[` into the REPL) and activating the project `[ activate .` (the period is part of the command).
 If you've done this correctly, when you open the Package manager (type `]`) you should see `(assignment_0) pkg>`.
 
 This document is as example of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), which [weave](http://weavejl.mpastell.com/stable/)s together text (markdown), math (LaTeX), and code (julia) from a single document.
 The source for this write-up can be found in `A0.jmd` and can be produced using `make_pdf.jl`.
-You may use this to produce your own writeups, but this is not required. 
+You may use this to produce your own writeups, but this is not required.
 Feel free to use LaTeX as normal, and include the relevant source code, outputs, and plots.
 
 ```julia
@@ -53,7 +53,7 @@ Random.seed!(414); #Set Random Seed
 # Probability
 
 ## Variance and Covariance
-Let $X$ and $Y$ be two continuous, independent random variables. 
+Let $X$ and $Y$ be two continuous, independent random variables.
 
 1. [3pts] Starting from the definition of independence, show that the independence of $X$ and $Y$ implies that their covariance is $0$.
 
@@ -70,7 +70,7 @@ $$
 
 Answer:
 
-## 1D Gaussian Densities 
+## 1D Gaussian Densities
 
 1. [1pts] Can a probability density function (pdf) ever take values greater than $1$?
 
@@ -107,16 +107,16 @@ end;
 
 3. [1pts] What is the value of the pdf at $x=0$? What is probability that $x=0$ (hint: is this the same as the pdf? Briefly explain your answer.)
 
-Answer 
+Answer
 
 4. A Gaussian with mean $\mu$ and variance $\sigma^2$ can be written as a simple transformation of the standard Gaussian with mean $0.$ and variance $1.$.
 
   * [[1pts]] Write the transformation that takes $x \sim \mathcal{N}(0.,1.)$ to $z \sim \mathcal{N}(\mu, \sigma^2)$:
-    
+
     Answer
 
   * [[2pts]] Write a code implementation to produce $n$ independent samples from $\mathcal{N}(\mu, \sigma^2)$ by transforming $n$ samples from $\mathcal{N}(0.,1.)$.
-    
+
     Answer
 
 ```julia
@@ -125,7 +125,7 @@ function sample_gaussian(n; mean=0., variance=0.01)
   x = #TODO
 
   # TODO: transform x to sample z from N(mean,variance)
-  z = 
+  z =
   return z
 end;
 ```
@@ -135,7 +135,7 @@ end;
 ```julia
 using Statistics: mean, var
 @testset "Numerically testing Gaussian Sample Statistics" begin
-  #TODO: Sample 100000 samples with your function and use mean and var to 
+  #TODO: Sample 100000 samples with your function and use mean and var to
   # compute statistics.
   # tests should compare statistics against the true mean and variance from arguments.
   # hint: use isapprox with keyword argument atol=1e-2
@@ -228,7 +228,7 @@ df2dx = #TODO
 
 3. [1pts] Compute the Jacobian of $f_3(x) = x'A$ with respect to $x$?
 
-If you try the usual `gradient` fucntion to compute the whole Jacobian it would give an error. 
+If you try the usual `gradient` fucntion to compute the whole Jacobian it would give an error.
 You can use the following code to compute the Jacobian instead.
 
 ```julia
@@ -245,10 +245,10 @@ function jacobian(f, x)
 end
 ```
 
-[2pts] Briefly, explain why `gradient` of $f_3$ is not well defined (hint: what is the dimensionality of the output?) and what the `jacobian` function is doing in terms of calls to `gradient`. 
+[2pts] Briefly, explain why `gradient` of $f_3$ is not well defined (hint: what is the dimensionality of the output?) and what the `jacobian` function is doing in terms of calls to `gradient`.
 Specifically, how many calls of `gradient` is required to compute a whole `jacobian` for $f : \mathbb{R}^m \rightarrow \mathbb{R}^n$?
 
-Answer: 
+Answer:
 
 The very important takeaway here is that, with AD, `gradient`s are cheap but full `jacobian`s are expensive.
 
