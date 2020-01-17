@@ -113,27 +113,34 @@ $$
 
 1. [1pts] Can a probability density function (pdf) ever take values greater than $1$?
 
-  Answer:
+  Answer: Yes, since a pdf is not a probability, it only has to satisfy the conditions that it is non-negative and its area/integral is equal to one.
 
 2.  Let $X$ be a univariate random variable distributed according to a Gaussian distribution with mean $\mu$ and variance $\sigma^2$.
 
 * [[1pts]] Write the expression for the pdf:
 
   Answer:
+$$
+  \begin{align}
+  f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)
+  \end{align}
+$$
+
 
 * [[2pts]] Write the code for the function that computes the pdf at $x$ with default values $\mu=0$ and $\sigma = \sqrt{0.01}$:
 
     Answer:
 
-```julia
+```julia; eval=true
 function gaussian_pdf(x; mean=0., variance=0.01)
-  return #TODO: implement pdf at x
+  return 1/(sqrt(2*pi)*sqrt(variance))* exp(-0.5*((x-mean)/sqrt(variance))^2)
 end
 ```
 
 Test your implementation against a standard implementation from a library:
-```julia
+```julia; eval=true
 # Test answers
+using Test
 using Distributions: pdf, Normal # Note Normal uses N(mean, stddev) for parameters
 @testset "Implementation of Gaussian pdf" begin
   x = randn()
@@ -146,50 +153,69 @@ end;
 
 3. [1pts] What is the value of the pdf at $x=0$? What is probability that $x=0$ (hint: is this the same as the pdf? Briefly explain your answer.)
 
-Answer
+Answer: The value of the pdf is:
+
+```julia;eval=true
+using Distributions: pdf, Normal
+pdf.(Normal(10., sqrt(1)), 0)
+```
+However, the probability that X = 0 is 0. Since we are working with a continuous random variable,
+the probability of X being a single point on the pdf is exactly 0.
+We can only interpret the pdf value (we get by plugging in X into the pdf function)
+as the likelihood and not a probability.
+
 
 4. A Gaussian with mean $\mu$ and variance $\sigma^2$ can be written as a simple transformation of the standard Gaussian with mean $0.$ and variance $1.$.
 
   * [[1pts]] Write the transformation that takes $x \sim \mathcal{N}(0.,1.)$ to $z \sim \mathcal{N}(\mu, \sigma^2)$:
 
-    Answer
+    Answer:
+$$
+    z = x\sigma + \mu
+$$
 
   * [[2pts]] Write a code implementation to produce $n$ independent samples from $\mathcal{N}(\mu, \sigma^2)$ by transforming $n$ samples from $\mathcal{N}(0.,1.)$.
 
     Answer
 
-```julia
+```julia;eval=true
+using Distributions: pdf, Normal
 function sample_gaussian(n; mean=0., variance=0.01)
   # n samples from standard gaussian
-  x = #TODO
+  x = rand(Normal(0., 1.), n)
 
   # TODO: transform x to sample z from N(mean,variance)
-  z =
+  z =  (x .* sqrt(variance)) .+ mean
   return z
 end;
+
 ```
 
 [2pts] Test your implementation by computing statistics on the samples:
 
-```julia
+```julia;eval=true
 using Statistics: mean, var
+using Test
 @testset "Numerically testing Gaussian Sample Statistics" begin
   #TODO: Sample 100000 samples with your function and use mean and var to
   # compute statistics.
   # tests should compare statistics against the true mean and variance from arguments.
   # hint: use isapprox with keyword argument atol=1e-2
-end;
+  @test isapprox(mean(sample_gaussian(100000; mean=0., variance=0.01)) , 0., atol=1e-2)
+  @test isapprox(var(sample_gaussian(100000; mean=0., variance=0.01))  , 0.01, atol=1e-2)
+end
 ```
 
 5. [3pts] Sample $10000$ samples from a Gaussian with mean $10.$ an variance $2$. Plot the **normalized** `histogram` of these samples. On the same axes `plot!` the pdf of this distribution.
 Confirm that the histogram approximates the pdf.
 (Note: with `Plots.jl` the function `plot!` will add to the existing axes.)
 
-```julia
-using Plots
-
-#histogram(#TODO)
-#plot!(#TODO)
+```julia;eval=true
+using Plots, Distributions
+using StatsPlots
+x = rand(Normal(10., 2.), 10000)
+histogram(x, normalize=true, label="histogram", color = :lighttest)
+plot!(Normal(10.,2), lw=2, label="pdf")
 ```
 
 # Calculus
