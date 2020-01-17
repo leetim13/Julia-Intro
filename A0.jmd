@@ -58,6 +58,25 @@ Let $X$ and $Y$ be two continuous, independent random variables.
 1. [3pts] Starting from the definition of independence, show that the independence of $X$ and $Y$ implies that their covariance is $0$.
 
 Answer:
+By definition of the expectation of continuous, independent random variables,
+$$
+\begin{align}
+E(XY) &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}  xyf_{xy}(x,y)dx dy \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}  xyf_{x}(x)f_{y}(y)dx dy \\
+&= (\int_{-\infty}^{\infty}  xf_{x}(x)dx) (\int_{-\infty}^{\infty} yf_{y}(y)dy)\\
+&= E(X)E(Y)\\
+\end{align}
+$$
+
+Hence, covariance could be written as follows,
+
+$$
+\begin{align}
+Cov(X,Y) &= E(XY) - E(X)E(Y)  \\
+&= E(X)E(Y) - E(X)E(Y) \text{  since X, Y are independent}\\
+&=0
+\end{align}
+$$
 
 2. [3pts] For a scalar constant $a$, show the following two properties starting from the definition of expectation:
 
@@ -69,6 +88,26 @@ $$
 $$
 
 Answer:
+$$
+\begin{align}
+\mathbb{E}(X+aY) &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} (X+aY) f_{X,Y}(x,y)dx dy  \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} Xf_{X,Y}(x,y)dx dy + \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} aYf_{X,Y}(x,y)dx dy  \\
+&= \int_{-\infty}^{\infty} X (\int_{-\infty}^{\infty} f_{X,Y}(x,y)dy) dx + \int_{-\infty}^{\infty} aY (\int_{-\infty}^{\infty} f_{X,Y}(x,y)dx) dy \\
+&= \int_{-\infty}^{\infty} X f_X(x) dx + \int_{-\infty}^{\infty} aY f_Y(y) dy \\
+&= \mathbb{E}(X) + a\mathbb{E}(Y)\\
+~\\
+~\\
+\text{var}(X + aY)  &= \mathbb{E}[((X+aY)- \mathbb{E}[X+aY])^{2}] \\
+&= \mathbb{E}[(X +aY - (\mu_x + a \mu_y))^{2}] \text{    proven previously}\\
+&= \mathbb{E}[((X - \mu_x) + (aY - a\mu_y))^2] \\
+&= \mathbb{E}[((X - \mu_x) + a(Y - \mu_y))^2] \\
+&= \mathbb{E}[(X - \mu_x)^2 + 2(X - \mu_x)a(Y - \mu_y) + a^2(Y - \mu_y)^2]\\
+&= \mathbb{E}[(X - \mu_x)^2] + \mathbb{E}[2a(X - \mu_x)(Y - \mu_y)] + \mathbb{E}[a^2(Y - \mu_y)^2]\\
+&= \text{var}[X] + 2aCov(X,Y) + a^2\text{var}[Y]\\
+&= \text{var}[X] + a^2\text{var}[Y] \text{     since X, Y are independent, covariance is 0}
+\end{align}
+$$
+
 
 ## 1D Gaussian Densities
 
