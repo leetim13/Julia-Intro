@@ -309,23 +309,30 @@ to implement and test your answers above.
 ### [1pts] Create Toy Data
 
 
-```julia
+```julia;eval=true
+using Zygote
 # Choose dimensions of toy data
-m = #TODO
-n = #TODO
+m = 2 #TODO
+n = 3 #TODO
 
 # Make random toy data with correct dimensions
-x = #TODO
-y = #TODO
-A = #TODO
-B = #TODO
+x = rand(m)#m
+y = rand(m)#m
+A = rand(m,n)#mxn
+B = rand(m,m)#mxm
+
 ```
 [1pts] Test to confirm that the sizes of your data is what you expect:
-```julia
+```julia;eval=true
 # Make sure your toy data is the size you expect!
+using Test
 @testset "Sizes of Toy Data" begin
   #TODO: confirm sizes for toy data x,y,A,B
   #hint: use `size` function, which returns tuple of integers.
+  @test size(x) == (2,)
+  @test size(y) == (2,)
+  @test size(A) == (2,3)
+  @test size(B) == (2,2)
 end;
 ```
 
@@ -339,15 +346,15 @@ using Zygote: gradient
 # note: `Zygote.gradient` returns a tuple of gradients, one for each argument.
 # if you want just the first element you will need to index into the tuple with [1]
 
-f1(x) = #TODO
-df1dx = #TODO
+f1(x) = (transpose(x)* y)#TODO
+df1dx = gradient(f1, x)[1]#TODO
 ```
 
 2. [1pts] Compute the gradient of $f_2(x) = x'x$ with respect to $x$?
 
 ```julia
-f2(x) = #TODO
-df2dx = #TODO
+f2(x) = (transpose(x)* x)#TODO
+df2dx = gradient(f2, x)[1]#TODO
 ```
 
 3. [1pts] Compute the Jacobian of $f_3(x) = x'A$ with respect to $x$?
@@ -367,18 +374,20 @@ function jacobian(f, x)
     end
     return j
 end
+f3(x) = (transpose(x)*A)
+jacobian(f3, x)
 ```
 
 [2pts] Briefly, explain why `gradient` of $f_3$ is not well defined (hint: what is the dimensionality of the output?) and what the `jacobian` function is doing in terms of calls to `gradient`.
 Specifically, how many calls of `gradient` is required to compute a whole `jacobian` for $f : \mathbb{R}^m \rightarrow \mathbb{R}^n$?
 
-Answer:
+Answer: The gradient of $f_3$ is not well defined because the resulting dimensions of the output should be $n × m$.
 
 The very important takeaway here is that, with AD, `gradient`s are cheap but full `jacobian`s are expensive.
 
 ```julia
-f3(x) = #TODO
-df3dx = #TODO: use jacobian
+f3(x) = transpose(x)*A #TODO
+df3dx = jacobian(f3, x)#TODO: use jacobian
 ```
 
 
@@ -386,8 +395,8 @@ df3dx = #TODO: use jacobian
 4. [1pts] Compute the gradient of $f_4(x) = x'Bx$ with respect to $x$?
 
 ```julia
-f4(x) = #TODO
-df4dx = #TODO
+f4(x) = transpose(x) * B * x #TODO
+df4dx = gradient(f4, x)[1]#TODO
 ```
 
 
@@ -395,9 +404,9 @@ df4dx = #TODO
 ```julia
 # Test to confirm that AD matches hand-derived gradients
 @testset "AD matches hand-derived gradients" begin
-  @test df1dx == #TODO: rhs from 2.1
-  @test df2dx == #TODO: rhs from 2.1
-  @test df3dx == #TODO: rhs from 2.1
-  @test df4dx == #TODO: rhs from 2.1
+  @test df1dx == y#TODO: rhs from 2.1
+  @test df2dx == 2 .* x #TODO: rhs from 2.1
+  @test df3dx == transpose(A)#TODO: rhs from 2.1
+  @test df4dx == transpose(x) * (transpose(B) + B) #TODO: rhs from 2.1
 end
 ```
