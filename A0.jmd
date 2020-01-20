@@ -121,9 +121,9 @@ $$
 
   Answer:
 $$
-  \begin{align}
-  f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)
-  \end{align}
+\begin{align}
+f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{1}{2}(\frac{x-\mu}{\sigma})^2)
+\end{align}
 $$
 
 
@@ -171,7 +171,7 @@ as the likelihood and not a probability.
 
     Answer:
 $$
-    z = x\sigma + \mu
+z = x\sigma + \mu
 $$
 
   * [[2pts]] Write a code implementation to produce $n$ independent samples from $\mathcal{N}(\mu, \sigma^2)$ by transforming $n$ samples from $\mathcal{N}(0.,1.)$.
@@ -211,7 +211,8 @@ Confirm that the histogram approximates the pdf.
 (Note: with `Plots.jl` the function `plot!` will add to the existing axes.)
 
 ```julia;eval=true
-using Plots, Distributions
+using Plots
+using Distributions
 using StatsPlots
 x = rand(Normal(10., 2.), 10000)
 histogram(x, normalize=true, label="histogram", color = :lighttest)
@@ -229,18 +230,76 @@ Answer the following questions in vector notation.
 1. [1pts] What is the gradient of $x'y$ with respect to $x$?
 
 Answer:
+$$
+\begin{align}
+x'y &= x_1 ⋅ y_1 + x_2 ⋅ y_2 + ... + x_m ⋅ y_m \\
+&= \sum_{i=1}^{m}x_i⋅ y_i \\
+\frac{∂\sum_{i=1}^{m}x_i⋅ y_i}{∂x_i} &= y_i\\
+\frac{∂x'y}{∂x} &= y\\
+\end{align}
+$$
 
 2. [1pts] What is the gradient of $x'x$ with respect to $x$?
 
 Answer:
+$$
+\begin{align}
+x'x &= {x_1}^2 + {x_2}^2 + ... {x_m}^2 \\
+&=  \sum_{i=1}^{m}{x_i}^2 \\
+\frac{∂\sum_{i=1}^{m}{x_i}^2}{∂x_i} &= 2x_i\\
+\frac{∂x'x}{∂x} &= 2x\\
+\end{align}
+$$
 
 3. [2pts] What is the Jacobian of $x'A$ with respect to $x$?
 
 Answer:
+$$
+\begin{align}
+x'A &= [(x_1 ⋅ a_{11}) + (x_2 ⋅ a_{21}) + ... + (x_m ⋅ a_{m1}) \\
+&(x_1 ⋅ a_{12}) + (x_2 ⋅ a_{22}) + ... + (x_m ⋅ a_{m2}) \\
+&... \\
+&(x_1 ⋅ a_{1n}) + (x_2 ⋅ a_{2n}) + ... + (x_m ⋅ a_{mn}) ]\\
+&= J_{n \times m}\\
+&=
+\begin{bmatrix}
+\frac{\partial \sum_{i=1}^{m}x_i \cdot a_i1}{\partial x_1} & ... & \frac{\partial \sum_{i=1}^{m}x_i \cdot a_i1}{\partial x_m} \\
+ & \vdots & \\
+\frac{\partial \sum_{i=1}^{m}x_i \cdot a_in}{\partial x_1}  & ... & \frac{\partial \sum_{i=1}^{m}x_i \cdot a_in}{\partial x_m} \\
+\end{bmatrix}
+~\\
+&=
+\begin{bmatrix}
+a_{11} & ... & a_{m1}\\
+ & \vdots & \\
+a_{1n}  & ... & a_{mn} \\
+\end{bmatrix}
+~\\
+&= {A'}_{n \times m}
+\end{align}
+$$
 
 4. [2pts] What is the gradient of $x'Bx$ with respect to $x$?
 
 Answer:
+$$
+\begin{align}
+x'B &= [x_1 \cdot b_{11} + x_2 \cdot b_{21} + x_m \cdot b_{m1} \\
+&x_1 \cdot b_{12} + x_2 \cdot b_{22} + x_m \cdot b_{m2}\\
+&... \\
+&x_1 \cdot b_{1m} + x_2 \cdot b_{2m} + x_m \cdot b_{mm} ]\\
+x'Bx &= (x_1 \cdot b_{11} + x_2 \cdot b_{21} + x_m \cdot b_{m1})\cdot x_1 \\
+&+ (x_1 \cdot b_{12} + x_2 \cdot b_{22} + x_m \cdot b_{m2})\cdot x_2 \\
+&+ ...\\
+&+ (x_1 \cdot b_{1m} + x_2 \cdot b_{2m} + x_m \cdot b_{mm})\cdot x_m\\
+&= \sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}\\
+\frac{∂\sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}}{∂x_k} &= \sum_{j=1}^{m}b_{kj}x_j+
+\sum_{i=1}^{m}b_{ik}x_i \\
+\frac{∂\sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}}{∂x} &= x^{T}B^{T} + x^{T}B\\
+&= x^T(B^T+B)\\
+\end{align}
+$$
+
 
 ## Automatic Differentiation (AD)
 
