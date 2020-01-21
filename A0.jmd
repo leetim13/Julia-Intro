@@ -292,11 +292,25 @@ x'Bx &= (x_1 \cdot b_{11} + x_2 \cdot b_{21} + x_m \cdot b_{m1})\cdot x_1 \\
 &+ (x_1 \cdot b_{12} + x_2 \cdot b_{22} + x_m \cdot b_{m2})\cdot x_2 \\
 &+ ...\\
 &+ (x_1 \cdot b_{1m} + x_2 \cdot b_{2m} + x_m \cdot b_{mm})\cdot x_m\\
-&= \sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}\\
-\frac{∂\sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}}{∂x_k} &= \sum_{j=1}^{m}b_{kj}x_j+
-\sum_{i=1}^{m}b_{ik}x_i \\
-\frac{∂\sum_{j=1}^{m}\sum_{i=1}^{m} b_{ij}{x_i}{x_j}}{∂x} &= x^{T}B^{T} + x^{T}B\\
-&= x^T(B^T+B)\\
+&= \sum_{i=1}^{m}\sum_{j=1}^{m} x_{i}{b_{ij}}{x_j}\\
+&= \sum_{i=1}^{m}(b_{ii}{x_i}^2+ \sum_{j \neq i}^{}x_{i}{b_{ij}}{x_j}) \\
+\frac{\partial\sum_{i=1}^{m}\sum_{j=1}^{m} x_{i}{b_{ij}}{x_j}}{\partial x_k} &= \sum_{j=1}^{m}x_{j}b_{jk}+
+\sum_{j=1}^{m}b_{kj}x_j \\
+\frac{\partial\sum_{i=1}^{m}\sum_{j=1}^{m} x_{i}{b_{ij}}{x_j}}{\partial x} &=        \begin{pmatrix}
+          \begin{bmatrix}
+           \sum_{j=1}^{m}x_{j}b_{j1} \\
+           \vdots \\
+           \sum_{j=1}^{m}x_{j}b_{jm}
+          \end{bmatrix} +
+          \begin{bmatrix}
+           \sum_{j=1}^{m}b_{1j}x_{j} \\
+           \vdots \\
+           \sum_{j=1}^{m}b_{mj}x_{j}\\
+         \end{bmatrix}
+    \end{pmatrix}
+~\\
+&= B^{T}x + Bx\\
+&= (B^{T} + B)x
 \end{align}
 $$
 
@@ -340,21 +354,21 @@ end;
 
 1. [1pts] Compute the gradient of $f_1(x) = x'y$ with respect to $x$?
 
-```julia
+```julia;eval=true
 # Use AD Tool
 using Zygote: gradient
 # note: `Zygote.gradient` returns a tuple of gradients, one for each argument.
 # if you want just the first element you will need to index into the tuple with [1]
 
-f1(x) = (transpose(x)* y)#TODO
-df1dx = gradient(f1, x)[1]#TODO
+f1(x) = (transpose(x)* y)
+df1dx = gradient(f1, x)[1]
 ```
 
 2. [1pts] Compute the gradient of $f_2(x) = x'x$ with respect to $x$?
 
-```julia
-f2(x) = (transpose(x)* x)#TODO
-df2dx = gradient(f2, x)[1]#TODO
+```julia;eval=true
+f2(x) = (transpose(x)* x)
+df2dx = gradient(f2, x)[1]
 ```
 
 3. [1pts] Compute the Jacobian of $f_3(x) = x'A$ with respect to $x$?
@@ -362,7 +376,7 @@ df2dx = gradient(f2, x)[1]#TODO
 If you try the usual `gradient` fucntion to compute the whole Jacobian it would give an error.
 You can use the following code to compute the Jacobian instead.
 
-```julia
+```julia;eval=true
 function jacobian(f, x)
     y = f(x)
     n = length(y)
@@ -385,28 +399,28 @@ Answer: The gradient of $f_3$ is not well defined because the resulting dimensio
 
 The very important takeaway here is that, with AD, `gradient`s are cheap but full `jacobian`s are expensive.
 
-```julia
-f3(x) = transpose(x)*A #TODO
-df3dx = jacobian(f3, x)#TODO: use jacobian
+```julia;eval=true
+f3(x) = transpose(x)*A
+df3dx = jacobian(f3, x)# use jacobian
 ```
 
 
 
 4. [1pts] Compute the gradient of $f_4(x) = x'Bx$ with respect to $x$?
 
-```julia
-f4(x) = transpose(x) * B * x #TODO
-df4dx = gradient(f4, x)[1]#TODO
+```julia;eval=true
+f4(x) = transpose(x) * B * x
+df4dx = gradient(f4, x)[1]
 ```
 
 
 5. [2pts] Test all your implementations against the manually derived derivatives in previous question
-```julia
+```julia;eval=true
 # Test to confirm that AD matches hand-derived gradients
 @testset "AD matches hand-derived gradients" begin
-  @test df1dx == y#TODO: rhs from 2.1
-  @test df2dx == 2 .* x #TODO: rhs from 2.1
-  @test df3dx == transpose(A)#TODO: rhs from 2.1
-  @test df4dx == transpose(x) * (transpose(B) + B) #TODO: rhs from 2.1
+  @test df1dx == y
+  @test df2dx == 2 .* x
+  @test df3dx == transpose(A)
+  @test isapprox(df4dx, (transpose(B) + B) * x)   #used is approx since there is a very small decimal place mismatched
 end
 ```
