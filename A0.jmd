@@ -157,10 +157,10 @@ Answer: The value of the pdf is:
 
 ```julia;eval=true
 using Distributions: pdf, Normal
-pdf.(Normal(10., sqrt(1)), 0)
+pdf.(Normal(0., sqrt(0.01)), 0)
 ```
 However, the probability that X = 0 is 0. Since we are working with a continuous random variable,
-the probability of X being a single point on the pdf is exactly 0.
+the probability of X being a single point on the cdf is exactly 0.
 We can only interpret the pdf value (we get by plugging in X into the pdf function)
 as the likelihood and not a probability.
 
@@ -395,7 +395,8 @@ jacobian(f3, x)
 [2pts] Briefly, explain why `gradient` of $f_3$ is not well defined (hint: what is the dimensionality of the output?) and what the `jacobian` function is doing in terms of calls to `gradient`.
 Specifically, how many calls of `gradient` is required to compute a whole `jacobian` for $f : \mathbb{R}^m \rightarrow \mathbb{R}^n$?
 
-Answer: The gradient of $f_3$ is not well defined because the resulting dimensions of the output should be $n × m$.
+Answer: The gradient of $f_3$ is not well defined because the resulting dimensions of the output should be $n × m$. Hence, since Jacobian is a  $n × m$ matrix, but gradient only takes in a column vector
+so we need to iterate through the columns of the Jacobian and calculate the gradients individually.
 
 The very important takeaway here is that, with AD, `gradient`s are cheap but full `jacobian`s are expensive.
 
