@@ -389,14 +389,13 @@ function jacobian(f, x)
     return j
 end
 f3(x) = (transpose(x)*A)
-jacobian(f3, x)
 ```
 
 [2pts] Briefly, explain why `gradient` of $f_3$ is not well defined (hint: what is the dimensionality of the output?) and what the `jacobian` function is doing in terms of calls to `gradient`.
 Specifically, how many calls of `gradient` is required to compute a whole `jacobian` for $f : \mathbb{R}^m \rightarrow \mathbb{R}^n$?
 
-Answer: The gradient of $f_3$ is not well defined because the resulting dimensions of the output should be $n × m$. Hence, since Jacobian is a  $n × m$ matrix, but gradient only takes in a column vector
-so we need to iterate through the columns of the Jacobian and calculate the gradients individually.
+Answer: The gradient of $f_3$ is not well defined because the resulting dimensions of the output is be $n × m$. Hence, since Jacobian is a  $n × m$ matrix, but gradient only takes in a column vector
+so we need to iterate "gradient" $n$ times through the columns of the Jacobian and calculate the gradients individually. This is only possible through the iteration of the for loop in the jacobian function.
 
 The very important takeaway here is that, with AD, `gradient`s are cheap but full `jacobian`s are expensive.
 
