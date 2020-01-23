@@ -216,7 +216,9 @@ using Distributions
 using StatsPlots
 x = rand(Normal(10., 2.), 10000)
 histogram(x, normalize=true, label="histogram", color = :lighttest)
-plot!(Normal(10.,2), lw=2, label="pdf")
+plot!(Normal(10.,2), lw=2, label="pdf", title="Normalized Histogram of Samples")
+xlabel!("x values from sample")
+ylabel!("probability density")
 ```
 
 # Calculus
