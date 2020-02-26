@@ -1,5 +1,5 @@
 # Intro to using Julia
-This repository is part of the assignment to sta414 course at the Univeristy of Toronto.
+This repository is part of the assignment of Statistical Methods for Machine Learning II at the Univeristy of Toronto.
 
 * `.gitignore` - tells git to ignore certain kinds of files. 
 * `A0.jmd` - the source code used to generate the assignment document, with the final writeup in a LaTeX `.tex` document, and a standard Julia `.jl` file.
